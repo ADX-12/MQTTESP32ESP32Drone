@@ -1,116 +1,48 @@
-# Multi-ESP32 MQTT Drone Control System
+# Executing commands through MQTT ( Subscriber & listener ) model for controlling a drone 
 
-Communicating with a Drone using Python and MQTT
+⚙️ Execution Steps
 
-Project Information
+1️⃣ Flash Codes to ESP32 Boards
 
-Project Title: Multi-ESP32 MQTT Drone Control System
-Developed For: Meritus.AI
-Developed By: Apurva Donde
-Role: Drone Systems Developer | Tools & Automation | STEM Education
+Flash the Subscriber code to the 1st ESP32 (Hub)
 
- Overview
+Flash the Listener code to the 2nd ESP32 (Command Receiver)
 
-This project establishes a multi-layer MQTT communication system between a Python script, two ESP32 boards, and a Pluto Drone.
-It demonstrates how commands can be transmitted over Wi-Fi using MQTT topics to control drone operations such as arm, takeoff, land, and disarm.
+2️⃣ Download the Python Wrapper
+Clone the Python wrapper repository:
 
- Hardware Requirements
-Component	Quantity	Description
-ESP32	2	Wi-Fi enabled microcontrollers
-Pluto Drone	1	Target drone to receive and execute commands
-
- System Topology
-Python Script  →  ESP32 (Bridge / Hub)  →  ESP32 (Listener)  →  Pluto Drone
-       (MQTT)             (Wi-Fi)                 (Serial / Command Execution)
+git clone https://github.com/DronaAviation/PROJECTS_WITH_PYTHON.git
 
 
-All communication between devices is handled using the MQTT protocol.
+3️⃣ Add Drone Control Script
 
- Components Description
-1. ESP32 – MQTT Bridge (Wi-Fi Hub)
+Copy the takeoff_land.py file from this repo into the cloned folder
+(path: PROJECTS_WITH_PYTHON/Takeoff_land.py)
+OR
 
-Acts as a Wi-Fi Access Point (AP).
+Create a new file (e.g., mydrone.py) and paste your Python MQTT command code inside.
 
-Subscribes to topic:
-
-pluto/cmd/#
-
-
-Forwards messages to:
-
-bridge/esp32/cmd
-
-
-Displays all received messages via the Serial Monitor for debugging.
-
- 2. ESP32 – MQTT Listener
-
-Connects to the ESP32 Hub Wi-Fi network.
-
-Subscribes to topic:
-
-bridge/esp32/cmd
-
-
-Receives commands and executes corresponding drone control operations:
-
-🟢 arm
-
-🔴 disarm
-
-✈️ takeoff
-
-🛬 land
-
-💻 3. Python – Command Publisher
-
-Script file: send_mqtt_cmd.py
-
-Publishes MQTT messages to the following topics:
-
-pluto/cmd/arm
-pluto/cmd/disarm
-pluto/cmd/takeoff
-pluto/cmd/land
-
-Run Command
-
-To send a command from the terminal:
-
-python3 send_mqtt_cmd.py arm
-
-
-(Replace “arm” with disarm, takeoff, or land as required.)
-
-Command Execution via Terminal
-
-You can also send commands using mosquitto_pub:
-
-mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/arm" -m "arm"
-mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/takeoff" -m "takeoff"
-mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/land" -m "land"
-
- Troubleshooting & Network Utilities
- Checking Local IP Address
-
-Use the following command (Mac/Linux) to identify your local IP:
+4️⃣ Connect to ESP32 Hub Wi-Fi
+Run the command below to get your system’s IP address:
 
 ipconfig getifaddr en0
 
-Common Issues & Solutions
-Issue	Possible Cause	Solution
-MQTT messages not received	Incorrect topic or broker IP	Verify MQTT topics and broker IP
-ESP32 not connecting	Wrong SSID/password	Double-check Wi-Fi credentials
-No serial output	Baud rate mismatch	Ensure Serial Monitor is set to the correct baud rate
 
- Future Improvements
-Add telemetry feedback from the drone to the Python dashboard.
+👉 Note down this IP and update it in your Python script, Subscriber, and Listener code files.
 
-Implement command acknowledgment for improved reliability.
+5️⃣ Build and Flash
+Rebuild and flash both ESP32 boards again with the updated IP address.
 
- Author
+6️⃣ Start MQTT Broker
+Open a terminal and start the Mosquitto service:
 
-Apurva Donde
-Drone Systems Developer | Tools & Automation | STEM Education
+sudo service mosquitto start
 
-Project made for: Meritus.AI
+
+7️⃣ Send Commands to the Drone
+Use the following command to send MQTT messages:
+
+mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/arm" -m "arm"
+
+
+💡 Replace the IP address with your actual Hub IP.
