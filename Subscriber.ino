@@ -1,4 +1,5 @@
 // ESP32_MQTT_Bridge_AP.ino 
+//The below code is for ESP32 which acts as a subscriber
 
 #include <WiFi.h> 
 
