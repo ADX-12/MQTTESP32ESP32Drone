@@ -1,100 +1,116 @@
-# Communicating with a drone using python and Mqtt 
-Multi-ESP32 MQTT Drone Control System
+# Multi-ESP32 MQTT Drone Control System
+
+Communicating with a Drone using Python and MQTT
+
+Project Information
+
+Project Title: Multi-ESP32 MQTT Drone Control System
+Developed For: Meritus.AI
+Developed By: Apurva Donde
+Role: Drone Systems Developer | Tools & Automation | STEM Education
+
  Overview
 
 This project establishes a multi-layer MQTT communication system between a Python script, two ESP32 boards, and a Pluto Drone.
 It demonstrates how commands can be transmitted over Wi-Fi using MQTT topics to control drone operations such as arm, takeoff, land, and disarm.
 
-1) Hardware Requirements
+ Hardware Requirements
 Component	Quantity	Description
-ESP32 - Qty	2	,Wi-Fi enabled microcontrollers
+ESP32	2	Wi-Fi enabled microcontrollers
 Pluto Drone	1	Target drone to receive and execute commands
+
  System Topology
 Python Script  →  ESP32 (Bridge / Hub)  →  ESP32 (Listener)  →  Pluto Drone
-        (MQTT)             (Wi-Fi)                 (Serial / Command Execution)
+       (MQTT)             (Wi-Fi)                 (Serial / Command Execution)
 
 
-Communication across all devices is handled using MQTT protocol.
+All communication between devices is handled using the MQTT protocol.
 
  Components Description
 1. ESP32 – MQTT Bridge (Wi-Fi Hub)
 
-     Acts as a Wi-Fi Access Point (AP).
+Acts as a Wi-Fi Access Point (AP).
 
-     Subscribes to topic:
+Subscribes to topic:
 
-     pluto/cmd/#
-
-     Forwards all received messages to:
-
-     bridge/esp8266/cmd
+pluto/cmd/#
 
 
-    Displays logs and messages via the Serial Monitor.
+Forwards messages to:
 
-2. ESP32 – MQTT Listener
-
-     Connects to the ESP32-Hub Wi-Fi network.
-
-     Subscribes to topic:
-
-     bridge/esp32/cmd
+bridge/esp32/cmd
 
 
-    Receives messages and executes corresponding drone commands:
+Displays all received messages via the Serial Monitor for debugging.
 
-     a) arm
+ 2. ESP32 – MQTT Listener
 
-     b) disarm
+Connects to the ESP32 Hub Wi-Fi network.
 
-     c) takeoff
+Subscribes to topic:
 
-     d) land
+bridge/esp32/cmd
 
-3. Python – Command Publisher
 
-     Script File: send_mqtt_cmd.py
+Receives commands and executes corresponding drone control operations:
 
-     Publishes MQTT messages to the drone topics:
+🟢 arm
 
-     **pluto/cmd/arm
-     pluto/cmd/disarm
-     pluto/cmd/takeoff
-     pluto/cmd/land**
+🔴 disarm
 
- 
-  Run Command
-**    python3 send_mqtt_cmd.py arm
-**
-(Replace “arm” with desired command: disarm, takeoff, or land)
+✈️ takeoff
 
- Command Execution via Terminal
+🛬 land
 
-   Once all connections are established, commands can be sent using mosquitto_pub:
+💻 3. Python – Command Publisher
 
-   **mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/arm" -m "arm"
-   mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/takeoff" -m "takeoff"
-   mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/land" -m "land"**
+Script file: send_mqtt_cmd.py
 
-Troubleshooting & Network Utilities
+Publishes MQTT messages to the following topics:
+
+pluto/cmd/arm
+pluto/cmd/disarm
+pluto/cmd/takeoff
+pluto/cmd/land
+
+Run Command
+
+To send a command from the terminal:
+
+python3 send_mqtt_cmd.py arm
+
+
+(Replace “arm” with disarm, takeoff, or land as required.)
+
+Command Execution via Terminal
+
+You can also send commands using mosquitto_pub:
+
+mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/arm" -m "arm"
+mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/takeoff" -m "takeoff"
+mosquitto_pub -h 192.168.4.2 -t "pluto/cmd/land" -m "land"
+
+ Troubleshooting & Network Utilities
  Checking Local IP Address
 
-Use the following command to identify your local IP (Mac/Linux):
+Use the following command (Mac/Linux) to identify your local IP:
 
-**ipconfig getifaddr en0**
+ipconfig getifaddr en0
 
-Common Issues
-  Issue	Possible Cause	Solution
-  MQTT messages not received	Incorrect topic or broker IP	Verify MQTT topics and broker IP
-  ESP32 not connecting	Wrong SSID/password	Double-check Wi-Fi credentials
-  No serial output	Baud rate mismatch	Ensure Serial Monitor is set to correct baud rate
+Common Issues & Solutions
+Issue	Possible Cause	Solution
+MQTT messages not received	Incorrect topic or broker IP	Verify MQTT topics and broker IP
+ESP32 not connecting	Wrong SSID/password	Double-check Wi-Fi credentials
+No serial output	Baud rate mismatch	Ensure Serial Monitor is set to the correct baud rate
 
-Future Improvements
+ Future Improvements
+Add telemetry feedback from the drone to the Python dashboard.
 
-  Add telemetry feedback from the drone to the Python dashboard.
-  Add command acknowledgement for improved reliability.
-
+Implement command acknowledgment for improved reliability.
 
  Author
+
 Apurva Donde
 Drone Systems Developer | Tools & Automation | STEM Education
+
+Project made for: Meritus.AI
